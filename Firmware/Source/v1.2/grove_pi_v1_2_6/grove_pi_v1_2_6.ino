@@ -17,6 +17,8 @@
 #include "S208T02.h"
 
 
+S208T02 fan[6];
+int isFanActiv[] = {0,0,0,0,0,0}; //Set to one for activate fan control on a specified pin starting pin 2 LSB, pin 8 MSB, default is not fan set 
 Timer t;
 
 MMA7660 acc;
@@ -60,7 +62,6 @@ byte accFlag=0,clkFlag=0;
 int8_t accv[3];
 byte rgb[] = { 0, 0, 0 };
 int run_once;
-
 //Dust sensor variables:
 unsigned long starttime;
 unsigned long sampletime_ms = 30000;//sample 30s ;
@@ -97,6 +98,7 @@ void setup()
     Wire.onRequest(sendData);
 	attachInterrupt(0,readPulseDust,CHANGE);
 	for(uint8_t i=0;i<6;i++){
+		if(isFanActiv[i]){ 
 			fan[i].begin();
 			fan[i].setPin(2+i);	
 		}
@@ -108,6 +110,7 @@ void setup()
 void FanStatus()
 {
   	for(uint8_t i=0;i<6;i++){
+		if(isFanActiv[i]){ 
 			fan[i].checkFanStatus();			
 		}
 	}	
