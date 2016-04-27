@@ -122,6 +122,7 @@ void loop()
 {
   long dur,RangeCm;
   t.update();
+  t.stop(tevery);
   if(index==4)
   {
     flag=1;
@@ -211,10 +212,8 @@ void loop()
 	//SSD Relay
     if(cmd[0]==21)
     {
-      t.stop(tevery);
 	  fan[cmd[1]].controlFanSpeed(cmd[2]);
       fan[cmd[1]].setFanControllerState(cmd[3]);      
-      tevery = t.every(POWER_FREQ, FanStatus);
     }
 	
     //RTC tine read
@@ -768,6 +767,7 @@ void loop()
             flow_read_start=millis();
         }
     }
+	tevery = t.every(POWER_FREQ, FanStatus);
 }
 
 void receiveData(int byteCount)
