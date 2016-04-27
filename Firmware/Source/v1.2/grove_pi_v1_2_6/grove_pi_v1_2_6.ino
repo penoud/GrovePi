@@ -17,8 +17,8 @@
 #include "S208T02.h"
 
 
-S208T02 fan[6];
-int isFanActiv[] = {0,0,0,0,0,0}; //Set to one for activate fan control on a specified pin starting pin 2 LSB, pin 8 MSB, default is not fan set 
+S208T02 ssdRelay[6];
+int isSsdRelayActiv[] = {0,0,0,0,0,0}; //Set to one for activate fan control on a specified pin starting pin 2 LSB, pin 8 MSB, default is not fan set 
 Timer t;
 
 MMA7660 acc;
@@ -98,9 +98,9 @@ void setup()
     Wire.onRequest(sendData);
 	attachInterrupt(0,readPulseDust,CHANGE);
 	for(uint8_t i=0;i<6;i++){
-		if(isFanActiv[i]){ 
-			fan[i].begin();
-			fan[i].setPin(2+i);	
+		if(isSsdRelayActiv[i]){ 
+			ssdRelay[i].begin();
+			ssdRelay[i].setPin(2+i);	
 		}
 	}	
 	delay(150);
@@ -110,8 +110,8 @@ void setup()
 void FanStatus()
 {
   	for(uint8_t i=0;i<6;i++){
-		if(isFanActiv[i]){ 
-			fan[i].checkFanStatus();			
+		if(isSsdRelayActiv[i]){ 
+			ssdRelay[i].checkFanStatus();			
 		}
 	}	
 }
@@ -212,8 +212,8 @@ void loop()
 	//SSD Relay
     if(cmd[0]==21)
     {
-	  fan[cmd[1]].controlFanSpeed(cmd[2]);
-      fan[cmd[1]].setFanControllerState(cmd[3]);      
+	  ssdRelay[cmd[1]].controlFanSpeed(cmd[2]);
+      ssdRelay[cmd[1]].setFanControllerState(cmd[3]);      
     }
 	
     //RTC tine read
